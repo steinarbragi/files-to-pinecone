@@ -16,7 +16,7 @@ import io
 import tempfile
 
 # Embedding and vector DB
-import pinecone
+from pinecone import Pinecone
 from sentence_transformers import SentenceTransformer
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -359,21 +359,21 @@ def get_embeddings(documents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def initialize_pinecone():
     """Initialize Pinecone client and ensure index exists."""
-    # Initialize Pinecone
-    pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
+    # Initialize Pinecone with new API
+    pc = Pinecone(api_key=PINECONE_API_KEY)
     
     # Check if index exists
-    if PINECONE_INDEX_NAME not in pinecone.list_indexes():
+    if PINECONE_INDEX_NAME not in pc.list_indexes().names():
         # Create index if it doesn't exist
         # Adjust dimensions to match your embedding model
-        pinecone.create_index(
+        pc.create_index(
             name=PINECONE_INDEX_NAME,
             dimension=embedding_model.get_sentence_embedding_dimension(),
             metric="cosine"
         )
     
     # Connect to the index
-    index = pinecone.Index(PINECONE_INDEX_NAME)
+    index = pc.Index(PINECONE_INDEX_NAME)
     return index
 
 def upload_to_pinecone(documents: List[Dict[str, Any]], batch_size: int = 100):
