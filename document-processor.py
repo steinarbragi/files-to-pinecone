@@ -33,10 +33,10 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 # For Linux/Mac, ensure tesseract is installed and in path
 
 # Initialize embedding model
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')  # Small, fast model for testing
-# For production, consider these stronger models:
-# - 'all-mpnet-base-v2' (better quality)
-# - 'multi-qa-mpnet-base-dot-v1' (optimized for retrieval)
+embedding_model = SentenceTransformer('intfloat/multilingual-e5-large')  # 1024 dimensions, supports 100+ languages including Icelandic
+# Alternative options:
+# - 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'  # 768 dimensions
+# - 'sentence-transformers/LaBSE'  # 768 dimensions, very good for Nordic languages
 
 # Create text splitter for chunking documents
 text_splitter = RecursiveCharacterTextSplitter(
